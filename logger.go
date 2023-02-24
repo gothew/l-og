@@ -27,5 +27,5 @@ type Logger interface {
   SetOutput(w io.Writer)
 
   // Debug logs a debug message.
-  Debug(msg interface{}, keyval ...interface{})
+  Debug(msg interface{}, keyvals ...interface{})
 }
