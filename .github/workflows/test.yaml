@@ -9,9 +9,6 @@ on:
 
 jobs:
   test:
-    strategy:
-      os: ubuntu-latest
-      go-version: 1.19.x
     runs-on: ubuntu-latest
     steps:
     - name: Install Go
