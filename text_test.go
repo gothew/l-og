@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMain(t *testing.T) {
+func TestTextLogger(t *testing.T) {
 	var buf bytes.Buffer
-	SetOutput(&buf)
+	logger := New()
 
 	cases := []struct {
 		name     string
@@ -19,11 +19,11 @@ func TestMain(t *testing.T) {
 		f        func(msg interface{}, kvs ...interface{})
 	}{
 		{
-			name:     "default logger debug with timestamp",
-			expected: "info\n",
+			name:     "ignore message",
+			expected: "",
 			msg:      "info",
 			kvs:      nil,
-			f:        Debug,
+			f:        logger.Debug,
 		},
 	}
 

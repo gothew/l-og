@@ -59,9 +59,12 @@ func (l *logger) log(msg interface{}, keyvals ...interface{}) {
 
 	switch l.formatter {
 	case LogftmFormatter:
+    // FIXME: use in default
     l.textFormatter(kvs...)
 	default:
 	}
+
+  _, _ = l.w.Write(l.b.Bytes())
 }
 
 func (l *logger) SetOutput(w io.Writer) {

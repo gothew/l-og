@@ -13,4 +13,5 @@ func (l *logger) textFormatter(keyvals ...interface{}) {
 			}
 		}
 	}
+  l.b.WriteByte('\n')
 }

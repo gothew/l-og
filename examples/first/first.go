@@ -6,6 +6,10 @@ import (
 
 func startExample() {
   log.Debug("test")
+  log.Debug("test")
+  log.Debug("test")
+  log.Debug("test")
+  log.Debug("test")
 }
 
 func main() {
