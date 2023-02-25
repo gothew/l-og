@@ -1,6 +1,8 @@
 package log
 
-import "io"
+import (
+	"io"
+)
 
 var defaultLogger = New().(*logger)
 
