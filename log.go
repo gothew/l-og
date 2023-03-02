@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"sync"
+	"sync/atomic"
 )
 
 var (
@@ -16,9 +17,11 @@ var _ Logger = &logger{}
 
 // logger is a logger that implements Logger
 type logger struct {
-	w         io.Writer
-	b         bytes.Buffer
-	mu        *sync.RWMutex
+	w  io.Writer
+	b  bytes.Buffer
+	mu *sync.RWMutex
+
+	level     int32
 	formatter Formatter
 	keyvals   []interface{}
 }
@@ -26,8 +29,9 @@ type logger struct {
 // New return new logger
 func New() Logger {
 	l := &logger{
-		b:  bytes.Buffer{},
-		mu: &sync.RWMutex{},
+		b:     bytes.Buffer{},
+		mu:    &sync.RWMutex{},
+		level: int32(InfoLevel),
 	}
 
 	if l.w == nil {
@@ -35,20 +39,25 @@ func New() Logger {
 	}
 
 	l.SetOutput(l.w)
+	l.SetLevel(Level(l.level))
 
 	return l
 }
 
-func (l *logger) log(msg interface{}, keyvals ...interface{}) {
+func (l *logger) log(level Level, msg interface{}, keyvals ...interface{}) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	defer l.b.Reset()
 
 	var kvs []interface{}
 
+	if level != noLevel {
+		kvs = append(kvs, LevelKey, level)
+	}
+
 	if msg != nil {
 		m := fmt.Sprint(msg)
-		kvs = append(kvs, msgKey, m)
+		kvs = append(kvs, MessageKey, m)
 	}
 
 	// append logger fields
@@ -59,12 +68,26 @@ func (l *logger) log(msg interface{}, keyvals ...interface{}) {
 
 	switch l.formatter {
 	case LogftmFormatter:
-    // FIXME: use in default
-    l.textFormatter(kvs...)
+		// FIXME: use in default
+		l.textFormatter(kvs...)
 	default:
 	}
 
-  _, _ = l.w.Write(l.b.Bytes())
+	_, _ = l.w.Write(l.b.Bytes())
+}
+
+// SetLevel sets the current level.
+func (l *logger) SetLevel(level Level) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	atomic.StoreInt32(&l.level, int32(level))
+}
+
+// GetLevel returns the current level.
+func (l *logger) GetLevel() Level {
+	l.mu.RLock()
+	defer l.mu.RUnlock()
+	return Level(l.level)
 }
 
 func (l *logger) SetOutput(w io.Writer) {
@@ -72,5 +95,5 @@ func (l *logger) SetOutput(w io.Writer) {
 }
 
 func (l *logger) Debug(msg interface{}, keyvals ...interface{}) {
-	l.log(msg, keyvals...)
+	l.log(DebugLevel, msg, keyvals...)
 }
