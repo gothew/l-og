@@ -23,6 +23,10 @@ func NowUTC() time.Time {
 
 // Logger is a interface for logging.
 type Logger interface {
+  // SetLevel sets the allowed level.
+  SetLevel(level Level)
+  // GetLevel returns the allowed level.
+  GetLevel() Level
   // SetOutput sets the output destination.
   SetOutput(w io.Writer)
 

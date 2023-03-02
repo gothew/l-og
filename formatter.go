@@ -10,3 +10,10 @@ const (
 const (
 	msgKey = "msg"
 )
+
+var (
+  // MessageKey is the key for message
+  MessageKey = "msg"
+  // LevelKey is the key for level
+  LevelKey = "lvl"
+)

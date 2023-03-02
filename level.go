@@ -10,6 +10,9 @@ const (
 	DebugLevel Level = iota - 1
 	// InfoLevel is the info level.
 	InfoLevel
+
+  // noLevel is used with log.Print.
+  noLevel
 )
 
 // String returns the string representation of the Level.
