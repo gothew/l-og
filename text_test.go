@@ -21,7 +21,7 @@ func TestTextLogger(t *testing.T) {
 		{
 			name:     "ignore message",
 			expected: "",
-			msg:      "info",
+			msg:      "this is a debug message",
 			kvs:      nil,
 			f:        logger.Debug,
 		},

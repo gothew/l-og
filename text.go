@@ -12,6 +12,10 @@ func (l *logger) textFormatter(keyvals ...interface{}) {
 			if level, ok := keyvals[i+1].(Level); ok {
 				lvl := strings.ToUpper(level.String())
 
+				if !l.notStyles {
+					lvl = levelStyle(level).String()
+				}
+
 				l.b.WriteString(lvl)
 				l.b.WriteByte(' ')
 			}
