@@ -24,6 +24,8 @@ type logger struct {
 	level     int32
 	formatter Formatter
 	keyvals   []interface{}
+
+	notStyles bool
 }
 
 // New return new logger
@@ -91,7 +93,14 @@ func (l *logger) GetLevel() Level {
 }
 
 func (l *logger) SetOutput(w io.Writer) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
 	l.w = w
+
+	if !isTerminal(w) {
+		// This only affects the TextFormatter
+		l.notStyles = true
+	}
 }
 
 func (l *logger) Debug(msg interface{}, keyvals ...interface{}) {
