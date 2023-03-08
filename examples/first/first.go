@@ -5,12 +5,8 @@ import (
 )
 
 func startExample() {
-  log.SetLevel(log.DebugLevel)
   log.Debug("test")
-  log.Debug("test")
-  log.Debug("test")
-  log.Debug("test")
-  log.Debug("test")
+  log.Info("info message");
 }
 
 func main() {

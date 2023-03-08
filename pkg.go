@@ -21,3 +21,7 @@ func GetLevel() Level {
 func Debug(msg interface{}, keyvals ...interface{}) {
   defaultLogger.log(DebugLevel, msg, keyvals...)
 }
+
+func Info(msg interface{}, keyvals ...interface{}) {
+  defaultLogger.log(InfoLevel, msg, keyvals...)
+}
