@@ -97,3 +97,7 @@ func (l *logger) SetOutput(w io.Writer) {
 func (l *logger) Debug(msg interface{}, keyvals ...interface{}) {
 	l.log(DebugLevel, msg, keyvals...)
 }
+
+func (l *logger) Info(msg interface{}, keyvals ...interface{}) {
+	l.log(InfoLevel, msg, keyvals...)
+}
