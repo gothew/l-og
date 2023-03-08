@@ -32,4 +32,6 @@ type Logger interface {
 
   // Debug logs a debug message.
   Debug(msg interface{}, keyvals ...interface{})
+  // Info logs an info message.
+  Info(msg interface{}, keyvals ...interface{})
 }
