@@ -10,7 +10,6 @@ const (
 	DebugLevel Level = iota - 1
 	// InfoLevel is the info level.
 	InfoLevel
-
   // noLevel is used with log.Print.
   noLevel
 )
