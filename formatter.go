@@ -12,6 +12,8 @@ const (
 )
 
 var (
+  // TimestampKey is the key for the timestamp.
+  TimestampKey = "ts"
   // MessageKey is the key for message
   MessageKey = "msg"
   // LevelKey is the key for level

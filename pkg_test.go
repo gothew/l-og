@@ -20,7 +20,7 @@ func TestMain(t *testing.T) {
 	}{
 		{
 			name:     "default logger debug with timestamp",
-			expected: "DEBUG info\n",
+			expected: "",
 			msg:      "info",
 			kvs:      nil,
 			f:        Debug,

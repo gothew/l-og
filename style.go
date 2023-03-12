@@ -3,6 +3,9 @@ package log
 import "github.com/charmbracelet/lipgloss"
 
 var (
+
+  TimestampStyle = lipgloss.NewStyle()
+
 	DebugLevelStyle = lipgloss.NewStyle().
 		SetString("DEBUG").
 		Bold(true).

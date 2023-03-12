@@ -4,7 +4,7 @@ import (
 	"io"
 )
 
-var defaultLogger = New().(*logger)
+var defaultLogger = New(WithTimestamp()).(*logger)
 
 func SetOutput(w io.Writer) {
   defaultLogger.SetOutput(w)
