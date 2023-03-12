@@ -32,7 +32,7 @@ type logger struct {
 	keyvals    []interface{}
 
 	timestamp bool
-	notStyles       bool
+	notStyles bool
 }
 
 // New return new logger
@@ -50,32 +50,32 @@ func New(opts ...LoggerOptions) Logger {
 	l.SetOutput(l.w)
 	l.SetLevel(Level(l.level))
 
-  if l.timeFunc == nil {
-    l.timeFunc = time.Now
-  }
+	if l.timeFunc == nil {
+		l.timeFunc = time.Now
+	}
 
-  if l.timeFormat == "" {
-    l.timeFormat = DefaultTimeFormat
-  }
+	if l.timeFormat == "" {
+		l.timeFormat = DefaultTimeFormat
+	}
 
 	return l
 }
 
 func (l *logger) log(level Level, msg interface{}, keyvals ...interface{}) {
 
-  // check if the level is allowed
-  if atomic.LoadInt32(&l.level) > int32(level) {
-    return
-  }
+	// check if the level is allowed
+	if atomic.LoadInt32(&l.level) > int32(level) {
+		return
+	}
 
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	defer l.b.Reset()
 
 	var kvs []interface{}
-  if l.timestamp {
-    kvs = append(kvs, TimestampKey, l.timeFunc())
-  }
+	if !l.timestamp {
+		kvs = append(kvs, TimestampKey, l.timeFunc())
+	}
 
 	if level != noLevel {
 		kvs = append(kvs, LevelKey, level)
@@ -104,9 +104,9 @@ func (l *logger) log(level Level, msg interface{}, keyvals ...interface{}) {
 
 // SetReportTimestamp sets whether the timestamp should be reported.
 func (l *logger) SetReportTimestamp(report bool) {
-  l.mu.Lock()
-  defer l.mu.Unlock()
-  l.timestamp = report
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.timestamp = report
 }
 
 // SetLevel sets the current level.
@@ -125,16 +125,16 @@ func (l *logger) GetLevel() Level {
 
 // SetTimeFormat sets the time format.
 func (l *logger) SetTimeFormat(format string) {
-  l.mu.Lock()
-  defer l.mu.Unlock()
-  l.timeFormat = format
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.timeFormat = format
 }
 
 // SetTimeFunction sets the time function.
 func (l *logger) SetTimeFunction(f TimeFunction) {
-  l.mu.Lock()
-  defer l.mu.Unlock()
-  l.timeFunc = f
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.timeFunc = f
 }
 
 func (l *logger) SetOutput(w io.Writer) {
