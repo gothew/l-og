@@ -155,3 +155,7 @@ func (l *logger) Debug(msg interface{}, keyvals ...interface{}) {
 func (l *logger) Info(msg interface{}, keyvals ...interface{}) {
 	l.log(InfoLevel, msg, keyvals...)
 }
+
+func (l *logger) Warn(msg interface{}, kevals ...interface{}) {
+  l.log(WarnLevel, msg, kevals...)
+}

@@ -10,8 +10,10 @@ const (
 	DebugLevel Level = iota - 1
 	// InfoLevel is the info level.
 	InfoLevel
-  // noLevel is used with log.Print.
-  noLevel
+	// WarnLevel is the warn level.
+	WarnLevel
+	// noLevel is used with log.Print.
+	noLevel
 )
 
 // String returns the string representation of the Level.
@@ -21,6 +23,8 @@ func (l Level) String() string {
 		return "debug"
 	case InfoLevel:
 		return "info"
+	case WarnLevel:
+		return "warn"
 	default:
 		return ""
 	}
@@ -33,6 +37,8 @@ func ParseLevel(level string) Level {
 		return DebugLevel
 	case InfoLevel.String():
 		return InfoLevel
+	case WarnLevel.String():
+		return WarnLevel
 	default:
 		return InfoLevel
 	}
