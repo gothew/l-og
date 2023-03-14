@@ -7,6 +7,7 @@ import (
 func startExample() {
   log.Debug("test")
   log.Info("info message");
+  log.Warn("warn message")
 }
 
 func main() {
