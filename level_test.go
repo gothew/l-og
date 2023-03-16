@@ -27,11 +27,36 @@ func TestParseLevel(t *testing.T) {
 			level:    "info",
 			expLevel: InfoLevel,
 		},
+		{
+			name:     "Parse warn",
+			level:    "WARN",
+			expLevel: WarnLevel,
+		},
+		{
+			name:     "Parse error",
+			level:    "ERROR",
+			expLevel: ErrorLevel,
+		},
+		{
+			name:     "Parse fatal",
+			level:    "FATAL",
+			expLevel: FatalLevel,
+		},
+		{
+			name:     "Default",
+			level:    "",
+			expLevel: InfoLevel,
+		},
+		{
+			name:     "Wrong level, set INFO",
+			level:    "WRONG_LEVEL",
+			expLevel: InfoLevel,
+		},
 	}
 
-  for _, tc := range testCases {
-    t.Run(tc.name, func(t *testing.T) {
-      assert.Equal(t, tc.expLevel, ParseLevel(tc.level))
-    })
-  }
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			assert.Equal(t, tc.expLevel, ParseLevel(tc.level))
+		})
+	}
 }
