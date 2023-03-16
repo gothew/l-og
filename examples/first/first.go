@@ -8,6 +8,7 @@ func startExample() {
   log.Debug("test")
   log.Info("info message");
   log.Warn("warn message")
+  log.Error("error message")
 }
 
 func main() {

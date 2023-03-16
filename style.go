@@ -31,6 +31,15 @@ var (
 			Light: "208",
 			Dark:  "192",
 		})
+
+	ErrorLevelStyle = lipgloss.NewStyle().
+			SetString("ERROR").
+			Bold(true).
+			MaxWidth(4).
+			Foreground(lipgloss.AdaptiveColor{
+			Light: "203",
+			Dark:  "204",
+		})
 )
 
 func levelStyle(level Level) lipgloss.Style {
@@ -41,6 +50,8 @@ func levelStyle(level Level) lipgloss.Style {
 		return InfoLevelStyle
   case WarnLevel:
     return WarnLevelStyle
+  case ErrorLevel:
+    return ErrorLevelStyle
 	default:
 		return lipgloss.NewStyle()
 	}

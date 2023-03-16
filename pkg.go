@@ -29,3 +29,7 @@ func Info(msg interface{}, keyvals ...interface{}) {
 func Warn(msg interface{}, keyvals ...interface{}) {
 	defaultLogger.log(WarnLevel, msg, keyvals...)
 }
+
+func Error(msg interface{}, keyvals ...interface{}) {
+	defaultLogger.log(ErrorLevel, msg, keyvals...)
+}
