@@ -12,8 +12,10 @@ const (
 	InfoLevel
 	// WarnLevel is the warn level.
 	WarnLevel
-  // ErrorLevel is the error level.
-  ErrorLevel
+	// ErrorLevel is the error level.
+	ErrorLevel
+	// FatalLevel is the fatal level.
+	FatalLevel
 	// noLevel is used with log.Print.
 	noLevel
 )
@@ -27,8 +29,10 @@ func (l Level) String() string {
 		return "info"
 	case WarnLevel:
 		return "warn"
-  case ErrorLevel:
-    return "error"
+	case ErrorLevel:
+		return "error"
+	case FatalLevel:
+		return "fatal"
 	default:
 		return ""
 	}
@@ -43,8 +47,10 @@ func ParseLevel(level string) Level {
 		return InfoLevel
 	case WarnLevel.String():
 		return WarnLevel
-  case ErrorLevel.String():
-    return ErrorLevel
+	case ErrorLevel.String():
+		return ErrorLevel
+	case FatalLevel.String():
+		return FatalLevel
 	default:
 		return InfoLevel
 	}

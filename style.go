@@ -40,6 +40,15 @@ var (
 			Light: "203",
 			Dark:  "204",
 		})
+
+  FatalLevelStyle = lipgloss.NewStyle().
+			SetString("FATAL").
+			Bold(true).
+			MaxWidth(4).
+			Foreground(lipgloss.AdaptiveColor{
+			Light: "133",
+			Dark:  "134",
+		})
 )
 
 func levelStyle(level Level) lipgloss.Style {
@@ -52,6 +61,8 @@ func levelStyle(level Level) lipgloss.Style {
     return WarnLevelStyle
   case ErrorLevel:
     return ErrorLevelStyle
+  case FatalLevel:
+    return FatalLevelStyle
 	default:
 		return lipgloss.NewStyle()
 	}

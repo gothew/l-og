@@ -36,6 +36,8 @@ type Logger interface {
   Info(msg interface{}, keyvals ...interface{})
   // Warn logs a warn message.
   Warn(msg interface{}, keyvals ...interface{})
-  // Error logs a error message
+  // Error logs a error message.
   Error(msg interface{}, keyvals ...interface{})
+  // Fatal logs a fatal message.
+  Fatal(msg interface{}, keyvals ...interface{})
 }

@@ -156,10 +156,15 @@ func (l *logger) Info(msg interface{}, keyvals ...interface{}) {
 	l.log(InfoLevel, msg, keyvals...)
 }
 
-func (l *logger) Warn(msg interface{}, kevals ...interface{}) {
-  l.log(WarnLevel, msg, kevals...)
+func (l *logger) Warn(msg interface{}, keyvals ...interface{}) {
+	l.log(WarnLevel, msg, keyvals...)
 }
 
-func (l *logger) Error(msg interface{}, kevals ...interface{}) {
-  l.log(ErrorLevel, msg, kevals...)
+func (l *logger) Error(msg interface{}, keyvals ...interface{}) {
+	l.log(ErrorLevel, msg, keyvals...)
+}
+
+func (l *logger) Fatal(msg interface{}, keyvals ...interface{}) {
+	l.log(FatalLevel, msg, keyvals...)
+  os.Exit(1)
 }
