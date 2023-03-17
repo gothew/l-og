@@ -1,10 +1,41 @@
 package log
 
 import (
+	"bytes"
 	"io"
+	"os"
+	"sync"
+	"time"
 )
 
-var defaultLogger = New(WithTimestamp()).(*logger)
+var defaultLogger = NewWithOptions(os.Stderr, Options{ReporTimestamp: true}) 
+
+func New(w io.Writer) *Logger {
+  return NewWithOptions(w, Options{})
+}
+
+func NewWithOptions(w io.Writer, o Options) *Logger {
+  l := &Logger{
+    b: bytes.Buffer{},
+    mu: &sync.RWMutex{},
+    level: int32(o.Level),
+
+    reportTimestamp: o.ReporTimestamp,
+  }
+
+  l.SetOutput(w)
+  l.SetLevel(Level(l.level))
+
+  if l.timeFunc == nil {
+    l.timeFunc = time.Now
+  }
+
+  if l.timeFormat == "" {
+    l.timeFormat = DefaultTimeFormat
+  }
+
+  return l
+}
 
 func SetOutput(w io.Writer) {
 	defaultLogger.SetOutput(w)

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (l *logger) textFormatter(keyvals ...interface{}) {
+func (l *Logger) textFormatter(keyvals ...interface{}) {
 	for i := 0; i < len(keyvals); i += 2 {
 		switch keyvals[i] {
     case TimestampKey:

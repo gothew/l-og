@@ -9,7 +9,7 @@ import (
 
 func TestTextLogger(t *testing.T) {
 	var buf bytes.Buffer
-	logger := New()
+	logger := New(&buf)
 
 	cases := []struct {
 		name     string
