@@ -7,7 +7,7 @@ import (
 // DefaultTimeFormat is the default time format.
 const DefaultTimeFormat = "2006/01/02 15:04:05"
 
-// TimeFunction is a function that returns a time.Time
+// TimeFunction is a function that returns a time.Time.
 type TimeFunction = func() time.Time
 
 

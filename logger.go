@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"sync"
 	"sync/atomic"
@@ -16,7 +15,7 @@ var (
 
 type LoggerOptions = func(*Logger)
 
-// Logger is a logger that implements Logger
+// Logger is a logger that implements Logger.
 type Logger struct {
 	w  io.Writer
 	b  bytes.Buffer
@@ -25,7 +24,6 @@ type Logger struct {
   isDiscard uint32
 
 	level      int32
-	prefix     string
 	timeFunc   TimeFunction
 	timeFormat string
 	formatter  Formatter
@@ -68,9 +66,9 @@ func (l *Logger) log(level Level, msg interface{}, keyvals ...interface{}) {
 
 	switch l.formatter {
 	case LogftmFormatter:
-		// FIXME: use in default
 		l.textFormatter(kvs...)
 	default:
+		l.textFormatter(kvs...)
 	}
 
 	_, _ = l.w.Write(l.b.Bytes())
@@ -120,7 +118,7 @@ func (l *Logger) SetOutput(w io.Writer) {
   }
 	l.w = w
   var isDiscard uint32
-  if w == ioutil.Discard {
+  if w == io.Discard {
     isDiscard = 1
   }
   atomic.StoreUint32(&l.isDiscard, isDiscard)

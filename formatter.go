@@ -7,10 +7,6 @@ const (
 	LogftmFormatter = iota
 )
 
-const (
-	msgKey = "msg"
-)
-
 var (
   // TimestampKey is the key for the timestamp.
   TimestampKey = "ts"
