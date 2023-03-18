@@ -67,6 +67,8 @@ func (l *Logger) log(level Level, msg interface{}, keyvals ...interface{}) {
 	switch l.formatter {
 	case LogftmFormatter:
 		l.textFormatter(kvs...)
+  case JSONFormatter:
+    l.jsonFormatter(kvs...)
 	default:
 		l.textFormatter(kvs...)
 	}
@@ -107,6 +109,13 @@ func (l *Logger) SetTimeFunction(f TimeFunction) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	l.timeFunc = f
+}
+
+// SetFormatter sets the format log.
+func (l *Logger) SetFormatter(f Formatter) {
+  l.mu.Lock()
+  defer l.mu.Unlock()
+  l.formatter = f
 }
 
 func (l *Logger) SetOutput(w io.Writer) {

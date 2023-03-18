@@ -45,6 +45,10 @@ func SetLevel(level Level) {
 	defaultLogger.SetLevel(level)
 }
 
+func SetFormatter(f Formatter) {
+  defaultLogger.SetFormatter(f)
+}
+
 func GetLevel() Level {
 	return defaultLogger.GetLevel()
 }
