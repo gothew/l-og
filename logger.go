@@ -21,7 +21,7 @@ type Logger struct {
 	b  bytes.Buffer
 	mu *sync.RWMutex
 
-  isDiscard uint32
+	isDiscard uint32
 
 	level      int32
 	timeFunc   TimeFunction
@@ -30,7 +30,7 @@ type Logger struct {
 	keyvals    []interface{}
 
 	reportTimestamp bool
-	notStyles bool
+	notStyles       bool
 }
 
 func (l *Logger) log(level Level, msg interface{}, keyvals ...interface{}) {
@@ -67,8 +67,8 @@ func (l *Logger) log(level Level, msg interface{}, keyvals ...interface{}) {
 	switch l.formatter {
 	case LogftmFormatter:
 		l.textFormatter(kvs...)
-  case JSONFormatter:
-    l.jsonFormatter(kvs...)
+	case JSONFormatter:
+		l.jsonFormatter(kvs...)
 	default:
 		l.textFormatter(kvs...)
 	}
@@ -113,24 +113,24 @@ func (l *Logger) SetTimeFunction(f TimeFunction) {
 
 // SetFormatter sets the format log.
 func (l *Logger) SetFormatter(f Formatter) {
-  l.mu.Lock()
-  defer l.mu.Unlock()
-  l.formatter = f
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.formatter = f
 }
 
 func (l *Logger) SetOutput(w io.Writer) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-  if w == nil {
-    w = os.Stderr
-  }
+	if w == nil {
+		w = os.Stderr
+	}
 	l.w = w
-  var isDiscard uint32
-  if w == io.Discard {
-    isDiscard = 1
-  }
-  atomic.StoreUint32(&l.isDiscard, isDiscard)
+	var isDiscard uint32
+	if w == io.Discard {
+		isDiscard = 1
+	}
+	atomic.StoreUint32(&l.isDiscard, isDiscard)
 }
 
 func (l *Logger) Debug(msg interface{}, keyvals ...interface{}) {
@@ -151,5 +151,26 @@ func (l *Logger) Error(msg interface{}, keyvals ...interface{}) {
 
 func (l *Logger) Fatal(msg interface{}, keyvals ...interface{}) {
 	l.log(FatalLevel, msg, keyvals...)
-  os.Exit(1)
+	os.Exit(1)
+}
+
+func (l *Logger) Debugf(format string, args ...interface{}) {
+	l.log(DebugLevel, fmt.Sprintf(format, args...))
+}
+
+func (l *Logger) Infof(format string, args ...interface{}) {
+	l.log(InfoLevel, fmt.Sprintf(format, args...))
+}
+
+func (l *Logger) Warnf(format string, args ...interface{}) {
+	l.log(WarnLevel, fmt.Sprintf(format, args...))
+}
+
+func (l *Logger) Errorf(format string, args ...interface{}) {
+	l.log(ErrorLevel, fmt.Sprintf(format, args...))
+}
+
+func (l *Logger) Fatalf(format string, args ...interface{}) {
+	l.log(FatalLevel, fmt.Sprintf(format, args...))
+	os.Exit(1)
 }

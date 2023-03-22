@@ -2,6 +2,7 @@ package log
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"os"
 	"sync"
@@ -71,5 +72,26 @@ func Error(msg interface{}, keyvals ...interface{}) {
 
 func Fatal(msg interface{}, keyvals ...interface{}) {
 	defaultLogger.log(FatalLevel, msg, keyvals...)
+	os.Exit(1)
+}
+
+func Debugf(format string, args ...interface{}) {
+	defaultLogger.log(DebugLevel, fmt.Sprintf(format, args...))
+}
+
+func Infof(format string, args ...interface{}) {
+	defaultLogger.log(InfoLevel, fmt.Sprintf(format, args...))
+}
+
+func Warnf(format string, args ...interface{}) {
+	defaultLogger.log(WarnLevel, fmt.Sprintf(format, args...))
+}
+
+func Errorf(format string, args ...interface{}) {
+	defaultLogger.log(ErrorLevel, fmt.Sprintf(format, args...))
+}
+
+func Fatalf(format string, args ...interface{}) {
+	defaultLogger.log(FatalLevel, fmt.Sprintf(format, args...))
 	os.Exit(1)
 }
