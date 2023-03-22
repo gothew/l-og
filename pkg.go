@@ -8,33 +8,33 @@ import (
 	"time"
 )
 
-var defaultLogger = NewWithOptions(os.Stderr, Options{ReporTimestamp: true}) 
+var defaultLogger = NewWithOptions(os.Stderr, Options{ReporTimestamp: true})
 
 func New(w io.Writer) *Logger {
-  return NewWithOptions(w, Options{})
+	return NewWithOptions(w, Options{})
 }
 
 func NewWithOptions(w io.Writer, o Options) *Logger {
-  l := &Logger{
-    b: bytes.Buffer{},
-    mu: &sync.RWMutex{},
-    level: int32(o.Level),
+	l := &Logger{
+		b:     bytes.Buffer{},
+		mu:    &sync.RWMutex{},
+		level: int32(o.Level),
 
-    reportTimestamp: o.ReporTimestamp,
-  }
+		reportTimestamp: o.ReporTimestamp,
+	}
 
-  l.SetOutput(w)
-  l.SetLevel(Level(l.level))
+	l.SetOutput(w)
+	l.SetLevel(Level(l.level))
 
-  if l.timeFunc == nil {
-    l.timeFunc = time.Now
-  }
+	if l.timeFunc == nil {
+		l.timeFunc = time.Now
+	}
 
-  if l.timeFormat == "" {
-    l.timeFormat = DefaultTimeFormat
-  }
+	if l.timeFormat == "" {
+		l.timeFormat = DefaultTimeFormat
+	}
 
-  return l
+	return l
 }
 
 func SetOutput(w io.Writer) {
@@ -46,7 +46,7 @@ func SetLevel(level Level) {
 }
 
 func SetFormatter(f Formatter) {
-  defaultLogger.SetFormatter(f)
+	defaultLogger.SetFormatter(f)
 }
 
 func GetLevel() Level {
@@ -71,4 +71,5 @@ func Error(msg interface{}, keyvals ...interface{}) {
 
 func Fatal(msg interface{}, keyvals ...interface{}) {
 	defaultLogger.log(FatalLevel, msg, keyvals...)
+	os.Exit(1)
 }
