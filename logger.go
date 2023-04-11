@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 	"sync"
 	"sync/atomic"
 )
@@ -23,14 +24,20 @@ type Logger struct {
 
 	isDiscard uint32
 
-	level      int32
-	timeFunc   TimeFunction
-	timeFormat string
-	formatter  Formatter
-	keyvals    []interface{}
+	level           int32
+	timeFunc        TimeFunction
+	timeFormat      string
+	formatter       Formatter
+	keyvals         []interface{}
+	callerOffset    int
+	callerFormatter CallerFormatter
 
 	reportTimestamp bool
-	notStyles       bool
+	reportCaller    bool
+
+	notStyles bool
+
+	helpers *sync.Map
 }
 
 func (l *Logger) log(level Level, msg interface{}, keyvals ...interface{}) {
@@ -51,6 +58,12 @@ func (l *Logger) log(level Level, msg interface{}, keyvals ...interface{}) {
 
 	if level != noLevel {
 		kvs = append(kvs, LevelKey, level)
+	}
+
+	if l.reportCaller {
+		file, line, fn := l.fillLoc(l.callerOffset + 2)
+		caller := l.callerFormatter(file, line, fn)
+		kvs = append(kvs, CallerKey, caller)
 	}
 
 	if msg != nil {
@@ -74,6 +87,22 @@ func (l *Logger) log(level Level, msg interface{}, keyvals ...interface{}) {
 	}
 
 	_, _ = l.w.Write(l.b.Bytes())
+}
+
+func (l *Logger) fillLoc(skip int) (file string, line int, fn string) {
+	const maxStackLen = 50
+	var pc [maxStackLen]uintptr
+
+	n := runtime.Callers(skip+2, pc[:])
+	frames := runtime.CallersFrames(pc[:n])
+
+	for {
+		frame, more := frames.Next()
+		_, helper := l.helpers.Load(frame.Function)
+		if !helper || !more {
+			return frame.File, frame.Line, frame.Function
+		}
+	}
 }
 
 // SetReportTimestamp sets whether the timestamp should be reported.

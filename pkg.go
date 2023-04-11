@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var defaultLogger = NewWithOptions(os.Stderr, Options{ReporTimestamp: true})
+var defaultLogger = NewWithOptions(os.Stderr, Options{ReportTimestamp: true})
 
 func New(w io.Writer) *Logger {
 	return NewWithOptions(w, Options{})
@@ -20,8 +20,9 @@ func NewWithOptions(w io.Writer, o Options) *Logger {
 		b:     bytes.Buffer{},
 		mu:    &sync.RWMutex{},
 		level: int32(o.Level),
-
-		reportTimestamp: o.ReporTimestamp,
+		reportTimestamp: o.ReportTimestamp,
+    reportCaller: o.ReportCaller,
+    callerFormatter: o.CallerFormatter,
 	}
 
 	l.SetOutput(w)
