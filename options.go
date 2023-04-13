@@ -1,6 +1,7 @@
 package log
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -20,6 +21,12 @@ type CallerFormatter func(string, int, string) string
 //	log.SetTimeFunction(log.NowUTC)
 func NowUTC() time.Time {
 	return time.Now().UTC()
+}
+
+// ShowCallerFormatter is a caller formatter that returns the last 2 levels of
+// the path and line number.
+func ShowCallerFormatter(file string, line int, funcName string) string {
+  return fmt.Sprintf("%s:%d", trimCallerPath(file, 2), line)
 }
 
 type Options struct {

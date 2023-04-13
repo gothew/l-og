@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"runtime"
+	"strings"
 	"sync"
 	"sync/atomic"
 )
@@ -103,6 +104,38 @@ func (l *Logger) fillLoc(skip int) (file string, line int, fn string) {
 			return frame.File, frame.Line, frame.Function
 		}
 	}
+}
+
+func trimCallerPath(path string, n int) string {
+	// lovely borrowed from zap
+	// nb. To make sure we trim the path correctly on Windows too, we
+	// counter-intuitively need to use '/' and *not* os.PathSeparator here,
+	// because the path given originates from Go stdlib, specifically
+	// runtime.Caller() which (as of Mar/17) returns forward slashes even on
+	// Windows.
+	//
+	// See https://github.com/golang/go/issues/3335
+	// and https://github.com/golang/go/issues/18151
+	//
+	// for discussion on the issue on Go side.
+
+	// Return the full path if n is 0.
+	if n <= 0 {
+		return path
+	}
+
+	idx := strings.LastIndexByte(path, '/')
+	if idx == -1 {
+		return path
+	}
+
+	for i := 0; i < n-1; i++ {
+		idx = strings.LastIndexByte(path[:idx], '/')
+		if idx == -1 {
+			return path
+		}
+	}
+	return path[idx+1:]
 }
 
 // SetReportTimestamp sets whether the timestamp should be reported.

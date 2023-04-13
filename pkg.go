@@ -19,6 +19,7 @@ func NewWithOptions(w io.Writer, o Options) *Logger {
 	l := &Logger{
 		b:     bytes.Buffer{},
 		mu:    &sync.RWMutex{},
+    helpers: &sync.Map{},
 		level: int32(o.Level),
 		reportTimestamp: o.ReportTimestamp,
     reportCaller: o.ReportCaller,
@@ -35,6 +36,10 @@ func NewWithOptions(w io.Writer, o Options) *Logger {
 	if l.timeFormat == "" {
 		l.timeFormat = DefaultTimeFormat
 	}
+
+  if l.callerFormatter == nil {
+    l.callerFormatter = ShowCallerFormatter
+  }
 
 	return l
 }

@@ -49,6 +49,9 @@ var (
 			Light: "133",
 			Dark:  "134",
 		})
+
+    // CallerStyle is the style for caller.
+    CallerStyle = lipgloss.NewStyle().Faint(true)
 )
 
 func levelStyle(level Level) lipgloss.Style {
