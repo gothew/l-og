@@ -70,3 +70,4 @@ func levelStyle(level Level) lipgloss.Style {
 		return lipgloss.NewStyle()
 	}
 }
+

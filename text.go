@@ -34,7 +34,7 @@ func (l *Logger) textFormatter(keyvals ...interface{}) {
     case CallerKey:
       if caller, ok := keyvals[i+1].(string); ok {
         caller = fmt.Sprintf("<%s>", caller)
-        caller = CallerStyle.String()
+        caller = CallerStyle.Render(caller)
         l.b.WriteString(caller)
         l.b.WriteByte(' ')
       }
