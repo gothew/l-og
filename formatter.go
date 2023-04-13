@@ -16,4 +16,6 @@ var (
   MessageKey = "msg"
   // LevelKey is the key for level
   LevelKey = "lvl"
+  // CallerKey is the key for caller
+  CallerKey = "caller"
 )

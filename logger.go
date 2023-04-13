@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
+	"strings"
 	"sync"
 	"sync/atomic"
 )
@@ -23,14 +25,20 @@ type Logger struct {
 
 	isDiscard uint32
 
-	level      int32
-	timeFunc   TimeFunction
-	timeFormat string
-	formatter  Formatter
-	keyvals    []interface{}
+	level           int32
+	timeFunc        TimeFunction
+	timeFormat      string
+	formatter       Formatter
+	keyvals         []interface{}
+	callerOffset    int
+	callerFormatter CallerFormatter
 
 	reportTimestamp bool
-	notStyles       bool
+	reportCaller    bool
+
+	notStyles bool
+
+	helpers *sync.Map
 }
 
 func (l *Logger) log(level Level, msg interface{}, keyvals ...interface{}) {
@@ -51,6 +59,12 @@ func (l *Logger) log(level Level, msg interface{}, keyvals ...interface{}) {
 
 	if level != noLevel {
 		kvs = append(kvs, LevelKey, level)
+	}
+
+	if l.reportCaller {
+		file, line, fn := l.fillLoc(l.callerOffset + 2)
+		caller := l.callerFormatter(file, line, fn)
+		kvs = append(kvs, CallerKey, caller)
 	}
 
 	if msg != nil {
@@ -74,6 +88,54 @@ func (l *Logger) log(level Level, msg interface{}, keyvals ...interface{}) {
 	}
 
 	_, _ = l.w.Write(l.b.Bytes())
+}
+
+func (l *Logger) fillLoc(skip int) (file string, line int, fn string) {
+	const maxStackLen = 50
+	var pc [maxStackLen]uintptr
+
+	n := runtime.Callers(skip+2, pc[:])
+	frames := runtime.CallersFrames(pc[:n])
+
+	for {
+		frame, more := frames.Next()
+		_, helper := l.helpers.Load(frame.Function)
+		if !helper || !more {
+			return frame.File, frame.Line, frame.Function
+		}
+	}
+}
+
+func trimCallerPath(path string, n int) string {
+	// lovely borrowed from zap
+	// nb. To make sure we trim the path correctly on Windows too, we
+	// counter-intuitively need to use '/' and *not* os.PathSeparator here,
+	// because the path given originates from Go stdlib, specifically
+	// runtime.Caller() which (as of Mar/17) returns forward slashes even on
+	// Windows.
+	//
+	// See https://github.com/golang/go/issues/3335
+	// and https://github.com/golang/go/issues/18151
+	//
+	// for discussion on the issue on Go side.
+
+	// Return the full path if n is 0.
+	if n <= 0 {
+		return path
+	}
+
+	idx := strings.LastIndexByte(path, '/')
+	if idx == -1 {
+		return path
+	}
+
+	for i := 0; i < n-1; i++ {
+		idx = strings.LastIndexByte(path[:idx], '/')
+		if idx == -1 {
+			return path
+		}
+	}
+	return path[idx+1:]
 }
 
 // SetReportTimestamp sets whether the timestamp should be reported.

@@ -31,6 +31,13 @@ func (l *Logger) textFormatter(keyvals ...interface{}) {
 				l.b.WriteString(lvl)
 				l.b.WriteByte(' ')
 			}
+    case CallerKey:
+      if caller, ok := keyvals[i+1].(string); ok {
+        caller = fmt.Sprintf("<%s>", caller)
+        caller = CallerStyle.Render(caller)
+        l.b.WriteString(caller)
+        l.b.WriteByte(' ')
+      }
 		case MessageKey:
 			if msg := keyvals[i+1]; msg != nil {
 				m := fmt.Sprint(msg)
